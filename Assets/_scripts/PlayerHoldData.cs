@@ -1,19 +1,49 @@
-﻿using System.Collections;
+﻿using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerHoldData : MonoBehaviour {
-
+	private string FILENAME = "Save.txt";
 	// Use this for initialization
-	void Start () {
-		DontDestroyOnLoad(this);
-	}
-
+	public FileStream fs;
 	//active/shown stats
 	int hitpts, hearts, curScore, totalKills;
 	//passive/hidden stats
 	int civKills, crimKills, polKills, preyKills, predKills;
+	public string filePath;
 
+	void Start()
+	{
+		DontDestroyOnLoad(this);
+		string contents = "";
+
+		if(File.Exists(FILENAME))
+		{
+			fs = File.Open(FILENAME, FileMode.Open);
+		}
+		else
+		{
+			fs = File.Create(FILENAME);
+			startSetUp();
+			fillContentsAtStart(contents);
+			File.WriteAllText(fs.Name, contents);
+		}
+		
+	}
+	public string fillContentsAtStart(string contents)
+	{
+		contents += "HP: " + hitpts + "\n";
+		contents += "HEARTS: " + hearts + "\n";
+		contents += "SCORE: " + curScore + "\n";
+		contents += "TOTAL_KILLS: " + totalKills + "\n";
+		contents += "CIVILIAN_KILLS: " + civKills + "\n";
+		contents += "CRIMINAL_KILLS: " + crimKills + "\n";
+		contents += "POLICE_KILLS: " + polKills + "\n";
+		contents += "PREY_KILLS: " + preyKills + "\n";
+		contents += "PREDATOR_KILLS: " + predKills + "\n";
+		return contents;
+	}
 
 	//Functions for getting individual stats
 	public int getHP()
@@ -130,6 +160,25 @@ public class PlayerHoldData : MonoBehaviour {
 	public void addPredKills(int kills)
 	{
 		predKills += kills;
+	}
+
+	public void startSetUp()
+	{
+		setHP(100);
+		setHearts(0);
+		setScore(0);
+		setKills(0);
+		setCivKills(0);
+		setCrimKills(0);
+		setPolKills(0);
+		setPreyKills(0);
+		setPredKills(0);
+	}
+
+	public void Quit()
+	{
+		string contents = File.ReadAllText(fs.Name);
+		System.Console.WriteLine(contents);
 	}
 
 }

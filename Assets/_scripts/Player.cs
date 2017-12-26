@@ -1,17 +1,32 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[Serializable]
+public class AnimSpriteSet
+{
+    public string AnimationName;
+    public Sprite[] Anim_Sprites;
+}
 //Holding player data for just the current level
 public class Player : MonoBehaviour {
     //active/shown stats
-    int hitpts, hearts, curScore, totalKills;
+    public int hitpts, hearts, curScore, totalKills;
     //passive/hidden stats
-    int civKills, crimKills, polKills, preyKills, predKills;
-  
+    public int civKills, crimKills, polKills, preyKills, predKills;
 
+    public AnimSpriteSet AnimSpriteSet;
+
+    public GameObject plyrData;
     // Use this for initialization
-    
+    public void Awake()
+    {
+        AnimSpriteSet.AnimationName = "Idle;";
+        plyrData = GameObject.FindGameObjectWithTag("Data");
+        startSetUp(plyrData.GetComponent<PlayerHoldData>());
+
+    }
 
     //Functions for getting individual stats
     public int getHP()
@@ -146,6 +161,19 @@ public class Player : MonoBehaviour {
         setPredKills(0);
     }
 
+    public void startSetUp(PlayerHoldData data)
+    {
+        setHP(data.getHP());
+        setHearts(data.getHearts());
+        setScore(data.getCurrentScore());
+        setKills(data.getTotalKills());
+        setCivKills(data.getCivKills());
+        setCrimKills(data.getCrimKills());
+        setPolKills(data.getPolKills());
+        setPreyKills(data.getPreyKills());
+        setPredKills(data.getPredKills());
+    }
+
     public void startSetUp(int HP, int Hearts, int Score)
     {
         setHP(HP);
@@ -171,4 +199,6 @@ public class Player : MonoBehaviour {
         setPreyKills(Prey);
         setPredKills(Pred);
     }
+
+
 }

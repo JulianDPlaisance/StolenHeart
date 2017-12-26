@@ -12,11 +12,12 @@ public class PlayerController : MonoBehaviour {
     //this (might move back to PlayerController)
     public Player play;
     //animation(s)
-    public Animator attack;
+    //public Animator attack;
     //reference to PlayerHoldData (probably move back to PlayerController)
     public GameObject dataHolder;
     //jump checks
-    public bool grounded, stoppedJumping, stoppedDoubleJumping;
+    public bool grounded;
+    public int TimesJumped;
     //Rigidbody2D for player
     private Rigidbody2D rigid2D;
     //Animator for player
@@ -65,7 +66,7 @@ public class PlayerController : MonoBehaviour {
             xspeed = Input.GetAxis("Horizontal") * MAXSPEED;
         }
         rigid2D.velocity = new Vector2(xspeed, rigid2D.velocity.y);
-        if(grounded == false && stoppedDoubleJumping == true)
+        if(grounded == false && TimesJumped == 2)
         {
             rigid2D.velocity = new Vector2(rigid2D.velocity.x * 0.50f, rigid2D.velocity.y);
         }
@@ -76,19 +77,17 @@ public class PlayerController : MonoBehaviour {
             if (grounded)
             {
                 rigid2D.velocity = new Vector2(rigid2D.velocity.x, jumpForce);
-                stoppedJumping = false;
-                stoppedDoubleJumping = false;
+                TimesJumped = 0;
             }
-            else if (!grounded && stoppedJumping == true && stoppedDoubleJumping == false)
+            else if (!grounded && TimesJumped < 2)
             {
                 rigid2D.velocity = new Vector2(rigid2D.velocity.x, secondJumpForce);
-                stoppedDoubleJumping = false;
             }
         }
 
         if (Input.GetButton("Jump"))
         {
-            if (!stoppedJumping)
+            if (TimesJumped == 0)
             {
                 if (jumpTimeCounter > 0)
                 {
@@ -96,7 +95,7 @@ public class PlayerController : MonoBehaviour {
                     jumpTimeCounter -= Time.deltaTime;
                 }
             }
-            else if (stoppedJumping && !stoppedDoubleJumping)
+            else if (TimesJumped == 1)
             {
                 if (secondJumpCounter > 0)
                 {
@@ -106,23 +105,6 @@ public class PlayerController : MonoBehaviour {
             }
         }
 
-        if(Input.GetButtonUp("Jump"))
-        {
-            if (!stoppedJumping)
-            {
-                jumpTimeCounter = 0;
-                stoppedJumping = true;
-            }
-            else if(!stoppedDoubleJumping)
-            {
-                secondJumpCounter = 0;
-                stoppedDoubleJumping = true;
-            }
-        }
-    }
-
-    public void Move(float move, bool jump)
-    {
 
     }
 
@@ -135,8 +117,20 @@ public class PlayerController : MonoBehaviour {
         {
             jumpTimeCounter = jumpTime;
             secondJumpCounter = secondJumpTime;
-            stoppedJumping = false;
-            stoppedDoubleJumping = false;
+            TimesJumped = 0;
+        }
+        if (Input.GetButtonUp("Jump"))
+        {
+            if (TimesJumped == 0)
+            {
+                jumpTimeCounter = 0;
+                TimesJumped = 1;
+            }
+            else if (TimesJumped == 1)
+            {
+                secondJumpCounter = 0;
+                TimesJumped = 2;
+            }
         }
     }
 
