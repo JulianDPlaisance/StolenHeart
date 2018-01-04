@@ -10,28 +10,21 @@ public class PlayerController : MonoBehaviour {
     public float MAXSPEED, moveSpeed, xspeed;
     public float jumpForce, secondJumpForce, jumpTime, secondJumpTime, jumpTimeCounter, secondJumpCounter;
     //this (might move back to PlayerController)
-    public Player play;
-    //animation(s)
-    //public Animator attack;
-    //reference to PlayerHoldData (probably move back to PlayerController)
-    public GameObject dataHolder;
+    Player play;
     //jump checks
-    public bool grounded;
-    public int TimesJumped;
+    bool grounded;
+    int TimesJumped;
     //Rigidbody2D for player
     private Rigidbody2D rigid2D;
-    //Animator for player
-    private Animator anim;
     //Checks for ground and ceiling
     private Transform GroundCheck, CeilingCheck;
     const float GroundedRadius = 0.2f, CeilingRadius = 0.1f;
     //facing direction
-    bool facingRight = true;
+    public bool facingRight = true;
 
     private void Awake()
     {
         rigid2D = GetComponent<Rigidbody2D>();
-        anim = GetComponent<Animator>();
         GroundCheck = transform.Find("GroundCheck");
         CeilingCheck = transform.Find("CeilingCheck");
     }
@@ -39,7 +32,6 @@ public class PlayerController : MonoBehaviour {
     void Start()
     {
         play = GetComponentInParent<Player>(); //grabbing player
-        dataHolder = GameObject.FindGameObjectWithTag("Data"); //grabbing data
         jumpTimeCounter = jumpTime;
         secondJumpCounter = secondJumpTime;
     }
@@ -68,7 +60,7 @@ public class PlayerController : MonoBehaviour {
         rigid2D.velocity = new Vector2(xspeed, rigid2D.velocity.y);
         if(grounded == false && TimesJumped == 2)
         {
-            rigid2D.velocity = new Vector2(rigid2D.velocity.x * 0.50f, rigid2D.velocity.y);
+            rigid2D.velocity = new Vector2(rigid2D.velocity.x * 0.75f, rigid2D.velocity.y);
         }
 
 

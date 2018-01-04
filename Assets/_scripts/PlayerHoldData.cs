@@ -1,48 +1,48 @@
-﻿using System.IO;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using System.IO;
 using UnityEngine;
 
 public class PlayerHoldData : MonoBehaviour {
 	private string FILENAME = "Save.txt";
 	// Use this for initialization
-	public FileStream fs;
+	StreamWriter fw;
+	StreamReader fr;
+	FileStream fs;
+	string[] contents = new string[9];
 	//active/shown stats
-	int hitpts, hearts, curScore, totalKills;
+	public int hitpts = 100, hearts = 0, curScore = 0, totalKills = 0;
 	//passive/hidden stats
-	int civKills, crimKills, polKills, preyKills, predKills;
-	public string filePath;
+	public int civKills = 0, crimKills = 0, polKills = 0, preyKills = 0, predKills = 0;
+
+	int[] OldStats = new int[9], NewStats = new int[9];
 
 	void Start()
 	{
 		DontDestroyOnLoad(this);
-		string contents = "";
-
-		if(File.Exists(FILENAME))
+		if (File.Exists(FILENAME))
 		{
-			fs = File.Open(FILENAME, FileMode.Open);
+			fr = new StreamReader(File.Open(FILENAME, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite));
+			startSetUp(fr);
+			fr.Close();
 		}
 		else
 		{
-			fs = File.Create(FILENAME);
-			startSetUp();
-			fillContentsAtStart(contents);
-			File.WriteAllText(fs.Name, contents);
+			fw = new StreamWriter(File.Open(FILENAME, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite));
+			writeStuff(fw);
+			fw.Close();
 		}
-		
 	}
-	public string fillContentsAtStart(string contents)
+	public void FillContents()
 	{
-		contents += "HP: " + hitpts + "\n";
-		contents += "HEARTS: " + hearts + "\n";
-		contents += "SCORE: " + curScore + "\n";
-		contents += "TOTAL_KILLS: " + totalKills + "\n";
-		contents += "CIVILIAN_KILLS: " + civKills + "\n";
-		contents += "CRIMINAL_KILLS: " + crimKills + "\n";
-		contents += "POLICE_KILLS: " + polKills + "\n";
-		contents += "PREY_KILLS: " + preyKills + "\n";
-		contents += "PREDATOR_KILLS: " + predKills + "\n";
-		return contents;
+		contents[0] = "HEALTH: " + hitpts;
+		contents[1] = "HEARTS: " + hearts;
+		contents[2] = "SCORRE: " + curScore;
+		contents[3] = "TLKILS: " + totalKills;
+		contents[4] = "CIVKLS: " + civKills;
+		contents[5] = "CRMKLS: " + crimKills;
+		contents[6] = "POLKLS: " + polKills;
+		contents[7] = "PRYKLS: " + preyKills;
+		contents[8] = "PRDKLS: " + predKills;
 	}
 
 	//Functions for getting individual stats
@@ -162,23 +162,36 @@ public class PlayerHoldData : MonoBehaviour {
 		predKills += kills;
 	}
 
-	public void startSetUp()
+	public void startSetUp(StreamReader reader)
 	{
-		setHP(100);
-		setHearts(0);
-		setScore(0);
-		setKills(0);
-		setCivKills(0);
-		setCrimKills(0);
-		setPolKills(0);
-		setPreyKills(0);
-		setPredKills(0);
+		for (int i = 0; i < 9; i++)
+		{
+			OldStats[i] = Int32.Parse(reader.ReadLine().Substring(7));
+		}
+		setHP(OldStats[0]);
+		setHearts(OldStats[1]);
+		setScore(OldStats[2]);
+		setKills(OldStats[3]);
+		setCivKills(OldStats[4]);
+		setCrimKills(OldStats[5]);
+		setPolKills(OldStats[6]);
+		setPreyKills(OldStats[7]);
+		setPredKills(OldStats[8]);
 	}
 
-	public void Quit()
+	private void writeStuff(StreamWriter writer)
 	{
-		string contents = File.ReadAllText(fs.Name);
-		System.Console.WriteLine(contents);
+		FillContents();
+		for(int i = 0; i < 9; i++)
+		{
+			writer.WriteLine(contents[i]);
+		}
 	}
 
+	private void OnApplicationQuit()
+	{
+		fw = new StreamWriter(File.Open(FILENAME, FileMode.OpenOrCreate, FileAccess.ReadWrite, FileShare.ReadWrite));
+		writeStuff(fw);
+		fw.Close();
+	}
 }

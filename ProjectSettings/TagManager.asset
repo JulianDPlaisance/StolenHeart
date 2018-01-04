@@ -12,6 +12,7 @@ TagManager:
   - PreyAnimal
   - PredatorAnimal
   - Data
+  - Killable
   layers:
   - Default
   - TransparentFX

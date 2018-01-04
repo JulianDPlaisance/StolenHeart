@@ -17,15 +17,45 @@ public class Player : MonoBehaviour {
     public int civKills, crimKills, polKills, preyKills, predKills;
 
     public AnimSpriteSet AnimSpriteSet;
+    private SpriteRenderer rend;
+    private int maxSprites = 4;
+    private int curSprite = 0;
+    public float spriteTime;
+    public float spriteCurTime;
 
-    public GameObject plyrData;
+    public PlayerHoldData plyrData;
     // Use this for initialization
     public void Awake()
     {
         AnimSpriteSet.AnimationName = "Idle;";
-        plyrData = GameObject.FindGameObjectWithTag("Data");
-        startSetUp(plyrData.GetComponent<PlayerHoldData>());
+        GameObject tmp = GameObject.FindGameObjectWithTag("Data");
+        plyrData = tmp.GetComponent<PlayerHoldData>();
+        startSetUp(plyrData);
 
+    }
+
+    public void Start()
+    {
+        setHP(plyrData.getHP());
+        setHearts(plyrData.getHearts());
+        setCivKills(plyrData.getCivKills());
+        setCrimKills(plyrData.getCrimKills());
+        setPolKills(plyrData.getPolKills());
+        setPreyKills(plyrData.getPreyKills());
+        setPredKills(plyrData.getPredKills());
+        setKills(plyrData.getTotalKills());
+        rend = this.GetComponent<SpriteRenderer>();
+    }
+
+    public void Update()
+    {
+        if(spriteCurTime <= 0)
+        {
+            rend.sprite = AnimSpriteSet.Anim_Sprites[curSprite % maxSprites];
+            curSprite++;
+            spriteCurTime = spriteTime;
+        }
+        spriteCurTime -= Time.deltaTime;
     }
 
     //Functions for getting individual stats
@@ -200,5 +230,23 @@ public class Player : MonoBehaviour {
         setPredKills(Pred);
     }
 
+    void OnDestroy()
+    {
+        plyrData.setHP(getHP());
+        plyrData.setHearts(getHearts());
+        plyrData.addScore(getCurrentScore());
+        plyrData.setKills(getTotalKills());
+        plyrData.setCivKills(getCivKills());
+        plyrData.setCrimKills(getCrimKills());
+        plyrData.setPolKills(getPolKills());
+        plyrData.setPredKills(getPredKills());
+        plyrData.setPreyKills(getPreyKills());
+
+    }
+
+    private void OnApplicationQuit()
+    {
+        OnDestroy();
+    }
 
 }
