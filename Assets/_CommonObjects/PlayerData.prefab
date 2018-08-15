@@ -8,15 +8,15 @@ Prefab:
     m_TransformParent: {fileID: 0}
     m_Modifications: []
     m_RemovedComponents: []
-  m_ParentPrefab: {fileID: 0}
+  m_SourcePrefab: {fileID: 0}
   m_RootGameObject: {fileID: 1898725495661592}
-  m_IsPrefabParent: 1
+  m_IsPrefabAsset: 1
 --- !u!1 &1898725495661592
 GameObject:
   m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  serializedVersion: 5
+  serializedVersion: 6
   m_Component:
   - component: {fileID: 4611111168710074}
   - component: {fileID: 114606197722072198}
@@ -30,7 +30,7 @@ GameObject:
 --- !u!4 &4611111168710074
 Transform:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1898725495661592}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
@@ -43,11 +43,20 @@ Transform:
 --- !u!114 &114606197722072198
 MonoBehaviour:
   m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
+  m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1898725495661592}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8bcdd0c3d9bbc12419ddbd07900a075c, type: 3}
+  m_Script: {fileID: 11500000, guid: ee14ee147867d2b45924e6ae1d24f1d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  hitpts: 100
+  hearts: 0
+  curScore: 0
+  totalKills: 0
+  civKills: 0
+  crimKills: 0
+  polKills: 0
+  preyKills: 0
+  predKills: 0

@@ -51,7 +51,7 @@ public class Player : MonoBehaviour {
     {
         if(spriteCurTime <= 0)
         {
-            rend.sprite = AnimSpriteSet.Anim_Sprites[curSprite % maxSprites];
+            //rend.sprite = AnimSpriteSet.Anim_Sprites[curSprite % maxSprites];
             curSprite++;
             spriteCurTime = spriteTime;
         }
